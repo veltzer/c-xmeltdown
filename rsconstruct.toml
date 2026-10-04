@@ -16,7 +16,7 @@ reject_dot_src_dirs = true
 # listed here must exist: rsconstruct rejects a missing one at config load.
 # Repos still on config/*.py keep a dep_inputs override in their local
 # overlay until converted.
-[processor.tera]
+[processor.generator.tera]
 dep_auto = [
 	"config/project.lua",
 	"config/personal.lua",
@@ -24,19 +24,19 @@ dep_auto = [
 ]
 src_dirs = ["tera.templates"]
 
-[processor.ruff]
+[processor.checker.ruff]
 src_dirs = ["src", "scripts", "config"]
 
 
-[processor.mypy]
+[processor.checker.mypy]
 src_dirs = ["src", "scripts", "config"]
 
-[processor.luacheck]
+[processor.checker.luacheck]
 src_dirs = ["config"]
 
 # ─── toml / yaml / json ──────────────────────────────────────────────────────
 
-[processor.taplo]
+[processor.checker.taplo]
 src_files = [".rumdl.toml", "pyproject.toml", "rsconstruct.toml"]
 
 # The Makefile compiled src/*.c to objects and linked five X11 binaries, with
@@ -46,7 +46,7 @@ src_files = [".rumdl.toml", "pyproject.toml", "rsconstruct.toml"]
 # uncrustify target was a manual .PHONY format step, not part of the build.)
 # It also builds wlmelt, the Wayland port of xmeltdown, generating the
 # protocol glue from the XMLs in protocol/ with wayland-scanner.
-[processor.explicit.xmeltdown]
+[processor.explicit.generic.xmeltdown]
 command = "scripts/build_xmeltdown.py"
 input_globs = ["src/*.c", "protocol/*.xml"]
 output_files = [
@@ -70,22 +70,22 @@ system = [
 ]
 
 # lint the GitHub Actions workflow files with actionlint
-[processor.actionlint]
+[processor.checker.actionlint]
 src_dirs = [".github/workflows"]
 
 # ─── markdown ────────────────────────────────────────────────────────────────
 
-[processor.rumdl]
+[processor.checker.rumdl]
 src_files = ["README.md"]
 
 # ─── xml / svg ───────────────────────────────────────────────────────────────
 
-[processor.xmllint]
+[processor.checker.xmllint]
 src_dirs = ["protocol"]
 
 # ─── c / c++ ─────────────────────────────────────────────────────────────────
 
-[processor.cppcheck]
+[processor.checker.cppcheck]
 src_dirs = ["src"]
 args = [
 	"--error-exitcode=1",
