@@ -16,5 +16,5 @@ Findings from a code scan on 2026-10-04.
 ## Low
 
 - `support/uncrustify.cfg`, `support/uncrustify.full.cfg` - nothing references them (`rsconstruct.toml:46` says the uncrustify target was dropped with the Makefile). Either wire them into an rsconstruct formatter/checker or delete them.
-- `rsconstruct.toml:49` - the explicit processor runs `gcc`, `pkg-config` and `wayland-scanner` through a wrapper script but sets no `required_tools`, so `rsconstruct tools` cannot report them missing. Declare them.
+- `rsconstruct.toml:49` - the explicit processor runs `gcc`, `pkg-config` and `wayland-scanner` through a wrapper script but sets no `required_tools`, so `rsconstruct tool` cannot report them missing. Declare them.
 - `pyproject.toml:10` - `pytest` is in the dev group, but the repo has no tests and no pytest processor. Drop it, or add a test for `scripts/build_xmeltdown.py`.
