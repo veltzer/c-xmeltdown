@@ -80,7 +80,7 @@ src_files = ["README.md"]
 
 # ─── xml / svg ───────────────────────────────────────────────────────────────
 
-[processor.checker.xmllint]
+[processor.checker.ixmllint]
 src_dirs = ["protocol"]
 
 # ─── c / c++ ─────────────────────────────────────────────────────────────────
