@@ -1,24 +1,26 @@
 #!/usr/bin/env python
 
 """ Build the five X11 demos, reproducing the Makefile: compile each src/*.c to
-out/obj/<name>.o, then link the per-binary object groups (draw.o is shared by
+<name>.o, then link the per-binary object groups (draw.o is shared by
 stickman, stickread and dance) with -lX11 -lm. File arguments are ignored -- the
 object groups below define the build.
 
 Also builds wlmelt, the Wayland port of xmeltdown: wayland-scanner turns the
 protocol XMLs (vendored wlr ones in protocol/, standard ones from the installed
-wayland-protocols) into headers and glue code in out/gen, which wlmelt.c is
-compiled against and linked with -lwayland-client -lpng. """
+wayland-protocols) into headers and glue code, which wlmelt.c is compiled
+against and linked with -lwayland-client -lpng.
+
+The objects and the generated protocol code go to a temporary directory, so
+only the declared binaries land in the tree. """
 
 import os
 import subprocess
 import sys
+import tempfile
 
 CC = "gcc"
 CFLAGS = ["-Wall", "-Werror", "-O3"]
-OBJ_FOLDER = os.path.join("out", "obj")
 BIN_FOLDER = os.path.join("out", "bin")
-GEN_FOLDER = os.path.join("out", "gen")
 
 # protocol name -> XML location; None means the installed wayland-protocols
 PROTOCOLS = {
@@ -52,42 +54,41 @@ def run(cmd):
         sys.exit(ret)
 
 
-def generate_protocols():
+def generate_protocols(gen_folder):
     """ Generate client headers and glue code for the Wayland protocols. """
-    os.makedirs(GEN_FOLDER, exist_ok=True)
     pkgdatadir = subprocess.check_output(
         ["pkg-config", "--variable=pkgdatadir", "wayland-protocols"],
         text=True).strip()
     for name, xml in PROTOCOLS.items():
         if xml is None:
             xml = os.path.join(pkgdatadir, STANDARD_PROTOCOL_PATHS[name])
-        header = os.path.join(GEN_FOLDER, f"{name}-client-protocol.h")
-        code = os.path.join(GEN_FOLDER, f"{name}-protocol.c")
+        header = os.path.join(gen_folder, f"{name}-client-protocol.h")
+        code = os.path.join(gen_folder, f"{name}-protocol.c")
         run(["wayland-scanner", "client-header", xml, header])
         run(["wayland-scanner", "private-code", xml, code])
 
 
-def compile_objects(stems):
-    """ Compile each unique source stem to an object file. """
-    os.makedirs(OBJ_FOLDER, exist_ok=True)
+def compile_objects(stems, tmp):
+    """ Compile each unique source stem to an object file in tmp. """
     for stem in stems:
-        obj = os.path.join(OBJ_FOLDER, stem + ".o")
+        obj = os.path.join(tmp, stem + ".o")
         if stem.endswith("-protocol"):
-            src = os.path.join(GEN_FOLDER, stem + ".c")
+            src = os.path.join(tmp, stem + ".c")
         else:
             src = os.path.join("src", stem + ".c")
-        run([CC] + CFLAGS + ["-I", GEN_FOLDER, "-c", "-o", obj, src])
+        run([CC] + CFLAGS + ["-I", tmp, "-c", "-o", obj, src])
 
 
 def main():
     """ main entry point """
-    generate_protocols()
-    stems = sorted({stem for group, _libs in BINARIES.values() for stem in group})
-    compile_objects(stems)
-    os.makedirs(BIN_FOLDER, exist_ok=True)
-    for name, (group, libs) in BINARIES.items():
-        objs = [os.path.join(OBJ_FOLDER, stem + ".o") for stem in group]
-        run([CC, "-o", os.path.join(BIN_FOLDER, name)] + objs + libs)
+    with tempfile.TemporaryDirectory() as tmp:
+        generate_protocols(tmp)
+        stems = sorted({stem for group, _libs in BINARIES.values() for stem in group})
+        compile_objects(stems, tmp)
+        os.makedirs(BIN_FOLDER, exist_ok=True)
+        for name, (group, libs) in BINARIES.items():
+            objs = [os.path.join(tmp, stem + ".o") for stem in group]
+            run([CC, "-o", os.path.join(BIN_FOLDER, name)] + objs + libs)
 
 
 if __name__ == "__main__":
