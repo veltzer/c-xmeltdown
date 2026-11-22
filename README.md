@@ -5,7 +5,7 @@
 
 description: A program to melt your screen
 
-project website: https://veltzer.github.io/c-xmeltdown
+project website: <https://veltzer.github.io/c-xmeltdown>
 
 author: Mark Veltzer
 
