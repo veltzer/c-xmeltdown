@@ -102,9 +102,6 @@ void Interpolate(Skeleton** skellist, int steps)
 	Skeleton* newskel=NULL;
 	/* Skeleton *tempskel; */
 	int curbuf=0;
-	int flag2=1;
-	int flag3=1;
-	int flag4=0;
 
 	newskel=&tween1;
 	// oldskel = &tween2;
@@ -140,18 +137,10 @@ void Interpolate(Skeleton** skellist, int steps)
 ** in it, bring it to the top.
 */
 			XClearWindow(dpy, buffer[!curbuf]);
-			if (!flag2 && flag4) XRaiseWindow(dpy, buffer[!curbuf]);
-			if (!flag2 && !flag4) {
-				XMapWindow(dpy, buffer[!curbuf]);
-				XUnmapWindow(dpy, buffer[curbuf]);
-			}
 			DrawSkel(newskel, unset_gc, buffer[!curbuf]);
-			if (flag2 && flag4) XRaiseWindow(dpy, buffer[!curbuf]);
-			if (flag2 && !flag4) {
-				XMapWindow(dpy, buffer[!curbuf]);
-				XUnmapWindow(dpy, buffer[curbuf]);
-			}
-			if (flag3) curbuf=!curbuf;
+			XMapWindow(dpy, buffer[!curbuf]);
+			XUnmapWindow(dpy, buffer[curbuf]);
+			curbuf=!curbuf;
 /*
  * Simulated double-buffering: Keep track of previous skeleton, and undraw
  * it just before drawing the new one.

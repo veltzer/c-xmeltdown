@@ -59,7 +59,8 @@ def generate_protocols(gen_folder):
     pkgdatadir = subprocess.check_output(
         ["pkg-config", "--variable=pkgdatadir", "wayland-protocols"],
         text=True).strip()
-    for name, xml in PROTOCOLS.items():
+    for name, protocol_xml in PROTOCOLS.items():
+        xml = protocol_xml
         if xml is None:
             xml = os.path.join(pkgdatadir, STANDARD_PROTOCOL_PATHS[name])
         header = os.path.join(gen_folder, f"{name}-client-protocol.h")
@@ -72,11 +73,8 @@ def compile_objects(stems, tmp):
     """ Compile each unique source stem to an object file in tmp. """
     for stem in stems:
         obj = os.path.join(tmp, stem + ".o")
-        if stem.endswith("-protocol"):
-            src = os.path.join(tmp, stem + ".c")
-        else:
-            src = os.path.join("src", stem + ".c")
-        run([CC] + CFLAGS + ["-I", tmp, "-c", "-o", obj, src])
+        src = os.path.join(tmp, stem + ".c") if stem.endswith("-protocol") else os.path.join("src", stem + ".c")
+        run([CC, *CFLAGS, "-I", tmp, "-c", "-o", obj, src])
 
 
 def main():
@@ -88,7 +86,7 @@ def main():
         os.makedirs(BIN_FOLDER, exist_ok=True)
         for name, (group, libs) in BINARIES.items():
             objs = [os.path.join(tmp, stem + ".o") for stem in group]
-            run([CC, "-o", os.path.join(BIN_FOLDER, name)] + objs + libs)
+            run([CC, "-o", os.path.join(BIN_FOLDER, name), *objs, *libs])
 
 
 if __name__ == "__main__":
