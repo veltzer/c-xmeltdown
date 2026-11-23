@@ -8,7 +8,7 @@ static Display *dpy;
 static Window win;
 static int screen;
 
-void Initialize(int argc, char** argv)
+static void Initialize(int argc, char** argv)
 {
 	XSizeHints size_hints;
 	if (!(dpy=XOpenDisplay(""))) {
@@ -37,7 +37,7 @@ void Initialize(int argc, char** argv)
 	XMapWindow(dpy, win);
 }
 
-void DrawGrid(void) {
+static void DrawGrid(void) {
 	int counter;
 	for (counter=0; counter < 16; counter++) {
 		int fromx, fromy, tox, toy;
@@ -57,14 +57,6 @@ void DrawGrid(void) {
 			gc_list[counter],
 			fromx, fromy, tox, toy);
 	}
-}
-
-/*
-** Given a list of points, draw line segments between them.
-*/
-
-void DrawLines(XPoint* pointlist, int pointcount, GC gc) {
-	XDrawLines (dpy, win, gc, pointlist, pointcount, CoordModeOrigin);
 }
 
 int main(int argc, char** argv) {

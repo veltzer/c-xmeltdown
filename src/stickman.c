@@ -8,14 +8,14 @@
 
 void Initialize(int, char**);
 void DrawSkel(SkeletonPtr s, GC gc, Window where);
-void HandleKeyPress(XKeyEvent* pevent);
-void HandleButtonPress(const XButtonEvent* pevent);
-void HandleButtonRelease(XButtonEvent* pevent);
-void HandleMotion(const XMotionEvent* pevent);
+static void HandleKeyPress(XKeyEvent* pevent);
+static void HandleButtonPress(const XButtonEvent* pevent);
+static void HandleButtonRelease(XButtonEvent* pevent);
+static void HandleMotion(const XMotionEvent* pevent);
 void DumpSkel(SkeletonPtr s);
-void FlashRay(RayPtr targetray);
-RayPtr FindNearestRay(const XButtonEvent* pevent);
-double FindDistance(int x, int y, RayPtr rayp);
+static void FlashRay(RayPtr targetray);
+static RayPtr FindNearestRay(const XButtonEvent* pevent);
+static double FindDistance(int x, int y, RayPtr rayp);
 
 extern Display* dpy;
 extern Window win;
@@ -120,7 +120,7 @@ int main(int argc, char** argv)
 
 static RayPtr targetray;
 
-void HandleKeyPress(XKeyEvent* pevent)
+static void HandleKeyPress(XKeyEvent* pevent)
 {
 	char charback;
 
@@ -135,13 +135,13 @@ void HandleKeyPress(XKeyEvent* pevent)
 	}
 }
 
-void HandleButtonRelease(XButtonEvent* pevent)
+static void HandleButtonRelease(XButtonEvent* pevent)
 {
 	ButtonDown=0;
 	DrawSkel(&bones, unset_gc, buffer[0]);
 }
 
-void HandleMotion(const XMotionEvent* pevent)
+static void HandleMotion(const XMotionEvent* pevent)
 {
 	int newx, newy, oldx, oldy;
 	RayPtr fooray;
@@ -185,7 +185,7 @@ void HandleMotion(const XMotionEvent* pevent)
 	}
 }
 
-void HandleButtonPress(const XButtonEvent* pevent)
+static void HandleButtonPress(const XButtonEvent* pevent)
 {
 	targetray=FindNearestRay(pevent);
 	switch (pevent->button) {
@@ -217,7 +217,7 @@ void HandleButtonPress(const XButtonEvent* pevent)
 	}
 }
 
-void FlashRay(RayPtr targetray)
+static void FlashRay(RayPtr targetray)
 {
 /*
  *	XDrawLine(	dpy, buffer[0], set_gc,
@@ -230,7 +230,7 @@ void FlashRay(RayPtr targetray)
 		targetray->anchor->x, targetray->anchor->y);
 }
 
-RayPtr FindNearestRay(const XButtonEvent* pevent) {
+static RayPtr FindNearestRay(const XButtonEvent* pevent) {
 	RayPtr retval=NULL;
 	double olddist;
 	int x, y;
@@ -255,7 +255,7 @@ RayPtr FindNearestRay(const XButtonEvent* pevent) {
 	return (retval);
 }
 
-double FindDistance(int x, int y, RayPtr rayp) {
+static double FindDistance(int x, int y, RayPtr rayp) {
 	int a, b;
 	double asq, bsq, retval;
 

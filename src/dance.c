@@ -13,17 +13,17 @@
 #define LINE_WIDTH 0	/* single pixel */
 
 void Initialize(int argc, char** argv);
-void DanceMainLoop(const int* routine);
-void ClearFrame();
-void DrawTween(double factor, int which, int curbuf);
-void ShowFrame(int curbuf);
-void clock_usleep (unsigned long usecs);
-void HandleKeyPress(XKeyEvent* pevent);
-void RandomMove();
+static void DanceMainLoop(const int* routine);
+static void ClearFrame();
+static void DrawTween(double factor, int which, int curbuf);
+static void ShowFrame(int curbuf);
+static void clock_usleep (unsigned long usecs);
+static void HandleKeyPress(XKeyEvent* pevent);
+static void RandomMove();
 void DrawSkel(SkeletonPtr s, GC gc, Window where);
-int Fill(FILE* filep, RayPtr rayp);
-Skeleton**ReadFile(const char* filename);
-int*ReadRoutineFile(const char* filename);
+static int Fill(FILE* filep, RayPtr rayp);
+static Skeleton**ReadFile(const char* filename);
+static int*ReadRoutineFile(const char* filename);
 
 extern Display* dpy;
 extern Window win;
@@ -112,7 +112,7 @@ int main(int argc, char** argv)
 	return(0);
 }
 
-void DanceMainLoop(const int* routine)
+static void DanceMainLoop(const int* routine)
 {
 	double factor;
 	XEvent my_event;
@@ -167,7 +167,7 @@ void DanceMainLoop(const int* routine)
 	}
 }
 
-void RandomMove()
+static void RandomMove()
 {
 	int i;
 	int randnum;
@@ -182,7 +182,7 @@ void RandomMove()
 	}
 }
 
-void HandleKeyPress(XKeyEvent* pevent)
+static void HandleKeyPress(XKeyEvent* pevent)
 {
 	char charback;
 	/* int	i; */
@@ -204,7 +204,7 @@ void HandleKeyPress(XKeyEvent* pevent)
 	}
 }
 
-void DrawTween(double factor, int which, int curbuf)
+static void DrawTween(double factor, int which, int curbuf)
 /* what fraction the movement is completed
  * which player
  * which buffer not to draw into */
@@ -242,11 +242,11 @@ void DrawTween(double factor, int which, int curbuf)
 }
 
 static int curbuf;
-void ClearFrame() {
+static void ClearFrame() {
 	XClearWindow(dpy, buffer[!curbuf]);
 }
 
-void ShowFrame(int curbuf)
+static void ShowFrame(int curbuf)
 {
 	XMapWindow(dpy, buffer[!curbuf]);
 	XUnmapWindow(dpy, buffer[curbuf]);
@@ -256,7 +256,7 @@ void ShowFrame(int curbuf)
 ** return list of integers corresponding to poses to strike, in order
 */
 
-int*ReadRoutineFile(const char* filename)
+static int*ReadRoutineFile(const char* filename)
 {
 	FILE* infile;
 	int okayflag=1;
@@ -291,7 +291,7 @@ int*ReadRoutineFile(const char* filename)
 	return (retval);
 }
 
-Skeleton**ReadFile(const char* filename)
+static Skeleton**ReadFile(const char* filename)
 {
 	FILE* infile;
 	Skeleton** retval;
@@ -361,7 +361,7 @@ Skeleton**ReadFile(const char* filename)
 	return (retval);
 }
 
-int Fill(FILE* filep, RayPtr rayp)
+static int Fill(FILE* filep, RayPtr rayp)
 {
 	int inputthingie1;
 	float inputthingie2;
@@ -371,7 +371,7 @@ int Fill(FILE* filep, RayPtr rayp)
 	return i;
 }
 
-void clock_usleep (unsigned long usecs)
+static void clock_usleep (unsigned long usecs)
 {
 	struct timeval tv;
 	tv.tv_sec=usecs/1000000L;

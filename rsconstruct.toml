@@ -87,11 +87,25 @@ src_dirs = ["protocol"]
 
 # ─── c / c++ ─────────────────────────────────────────────────────────────────
 
-[processor.checker.cppcheck]
-src_dirs = ["src"]
+# stickman is one program made of stickman.c plus the shared drawing module
+# draw.c: one run over both so draw.c's functions see their caller
+[processor.checker.cppcheck.stickman]
+batch = true
+src_files = ["src/stickman.c", "src/draw.c"]
 args = [
 	"--error-exitcode=1",
-	"--enable=warning,style,performance,portability",
+	"--enable=warning,style,performance,portability,information,unusedFunction",
+	"--check-level=exhaustive",
+	"--inline-suppr",
+]
+
+# every other .c file is a standalone program with its own main: one run per file
+[processor.checker.cppcheck.programs]
+src_dirs = ["src"]
+src_exclude_files = ["stickman.c", "draw.c"]
+args = [
+	"--error-exitcode=1",
+	"--enable=warning,style,performance,portability,information,unusedFunction",
 	"--check-level=exhaustive",
 	"--inline-suppr",
 ]

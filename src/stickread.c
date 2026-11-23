@@ -6,11 +6,11 @@
 #include "stickman.h"
 
 void Initialize(int argc, char** argv);
-void HandleKeyPress(const XKeyEvent* pevent);
-void Interpolate(Skeleton** skellist, int steps);
-int Fill(FILE* filep, RayPtr rayp);
+static void HandleKeyPress(const XKeyEvent* pevent);
+static void Interpolate(Skeleton** skellist, int steps);
+static int Fill(FILE* filep, RayPtr rayp);
 void DrawSkel(SkeletonPtr s, GC gc, Window where);
-Skeleton** ReadFile(const char* filename);
+static Skeleton** ReadFile(const char* filename);
 
 extern Display* dpy;
 extern Window win;
@@ -83,13 +83,13 @@ int main(int argc, char** argv)
 			Interpolate(skellist, framecount);
 	}
 }
-void HandleKeyPress(const XKeyEvent* pevent)
+static void HandleKeyPress(const XKeyEvent* pevent)
 {
 	if (pevent->keycode == 'q') ;
 	exit(0);
 }
 
-void Interpolate(Skeleton** skellist, int steps)
+static void Interpolate(Skeleton** skellist, int steps)
 {
 	RayPtr to, from, tweenray;
 	int bonesize=sizeof(Ray);
@@ -160,7 +160,7 @@ void Interpolate(Skeleton** skellist, int steps)
 	}
 }
 
-Skeleton**ReadFile(const char* filename)
+static Skeleton**ReadFile(const char* filename)
 {
 	FILE* infile;
 	Skeleton** retval;
@@ -229,7 +229,7 @@ Skeleton**ReadFile(const char* filename)
 	return (retval);
 }
 
-int Fill(FILE* filep, RayPtr rayp)
+static int Fill(FILE* filep, RayPtr rayp)
 {
 	int inputthingie1;
 	float inputthingie2;

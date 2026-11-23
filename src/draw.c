@@ -5,8 +5,8 @@
 #include <stdlib.h>
 #include "stickman.h"
 
-void DrawLines(XPoint* pointlist, int pointcount, GC gc, Window where);
-void EndPoint(RayPtr targetRay, double currentT);
+static void DrawLines(XPoint* pointlist, int pointcount, GC gc, Window where);
+static void EndPoint(RayPtr targetRay, double currentT);
 
 Display *dpy;
 Window win;
@@ -198,7 +198,7 @@ void DrawSkel(SkeletonPtr s, GC gc, Window where)
 ** the cumulative angle-so-far has been passed in as currentT, fill in
 ** the endpoints of the Ray.
 */
-void EndPoint(RayPtr targetRay, double currentT)
+static void EndPoint(RayPtr targetRay, double currentT)
 {
 	targetRay->x=
 		targetRay->anchor->x+
@@ -212,7 +212,7 @@ void EndPoint(RayPtr targetRay, double currentT)
 ** Given a list of points, draw line segments between them.
 */
 
-void DrawLines(XPoint* pointlist, int pointcount, GC gc, Window where)
+static void DrawLines(XPoint* pointlist, int pointcount, GC gc, Window where)
 {
 	XDrawLines (dpy, where, gc, pointlist, pointcount, CoordModeOrigin);
 }

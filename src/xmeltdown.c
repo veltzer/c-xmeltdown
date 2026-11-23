@@ -55,9 +55,9 @@
 #define min(a, b) ((a) < (b) ? (a) : (b))
 #define max(a, b) ((a) > (b) ? (a) : (b))
 
-void do_planes();
-void do_all();
-int calc_xloc(int width);
+static void do_planes();
+static void do_all();
+static int calc_xloc(int width);
 
 Display *dpy;
 Window win;
@@ -65,7 +65,7 @@ GC copygc, fillgc;
 int screen;
 int depth;
 
-void usage(void) {
+static void usage(void) {
 	fprintf(stderr, "Usage: meltdown [-planes] [-display <displayname>]\n");
 	exit(EXIT_FAILURE);
 }
@@ -125,7 +125,7 @@ int main(int argc, char** argv, char** envp) {
 	return EXIT_SUCCESS;
 }
 
-void do_planes() {
+static void do_planes() {
 	int over=0;
 	int finished=0;
 	int dist, size, i;
@@ -181,7 +181,7 @@ void do_planes() {
 	}
 }
 
-void do_all() {
+static void do_all() {
 	int over;
 	int finished=0;
 	int dist, size, i;
@@ -230,7 +230,7 @@ void do_all() {
 	}
 }
 
-int calc_xloc(int width) {
+static int calc_xloc(int width) {
 	int xloc;
 	/* give values near edges a better chance */
 	xloc=rnd(DisplayWidth(dpy, screen)+MIN_WIDTH)-MIN_WIDTH;
