@@ -28,7 +28,7 @@ src_dirs = ["config"]
 # ─── toml / yaml / json ──────────────────────────────────────────────────────
 
 [processor.checker.taplo]
-src_files = [".rumdl.toml", "pyproject.toml", "rsconstruct.toml"]
+src_files = [".ruff.toml", ".rumdl.toml", "pyproject.toml", "rsconstruct.toml"]
 
 # The Makefile compiled src/*.c to objects and linked five X11 binaries, with
 # draw.o shared across stickman/stickread/dance, all against -lX11 -lm. That
