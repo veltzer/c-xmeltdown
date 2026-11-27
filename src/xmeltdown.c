@@ -70,7 +70,7 @@ static void usage(void) {
 	exit(EXIT_FAILURE);
 }
 
-int main(int argc, char** argv, char** envp) {
+int main(int argc, char** argv) {
 	char *display=NULL;
 	unsigned long vmask;
 	XSetWindowAttributes xswat;

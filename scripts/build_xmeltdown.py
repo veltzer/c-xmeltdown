@@ -19,7 +19,7 @@ import sys
 import tempfile
 
 CC = "gcc"
-CFLAGS = ["-Wall", "-Werror", "-pedantic", "-O3"]
+CFLAGS = ["-Wall", "-Wextra", "-Werror", "-pedantic", "-O3"]
 BIN_FOLDER = os.path.join("out", "bin")
 
 # protocol name -> XML location; None means the installed wayland-protocols

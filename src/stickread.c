@@ -6,7 +6,7 @@
 #include "stickman.h"
 
 void Initialize(int argc, char** argv);
-static void HandleKeyPress(const XKeyEvent* pevent);
+static void HandleKeyPress(void);
 static void Interpolate(Skeleton** skellist, int steps);
 static int Fill(FILE* filep, RayPtr rayp);
 void DrawSkel(SkeletonPtr s, GC gc, Window where);
@@ -75,7 +75,7 @@ int main(int argc, char** argv)
 	while (1) {
 		XNextEvent (dpy, &my_event);
 		if (my_event.type == KeyPress)
-			HandleKeyPress((XKeyEvent*)&my_event);
+			HandleKeyPress();
 		if (my_event.type == ButtonPress) {
 			Interpolate(skellist, framecount);
 			printf ("Beep.");
@@ -83,9 +83,11 @@ int main(int argc, char** argv)
 			Interpolate(skellist, framecount);
 	}
 }
-static void HandleKeyPress(const XKeyEvent* pevent)
+// Any key ends the program. The test for 'q' that stood here ended in a
+// stray semicolon and compared a keycode with a character, so it never
+// decided anything.
+static void HandleKeyPress(void)
 {
-	if (pevent->keycode == 'q') ;
 	exit(0);
 }
 

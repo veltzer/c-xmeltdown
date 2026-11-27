@@ -10,7 +10,7 @@ void Initialize(int, char**);
 void DrawSkel(SkeletonPtr s, GC gc, Window where);
 static void HandleKeyPress(XKeyEvent* pevent);
 static void HandleButtonPress(const XButtonEvent* pevent);
-static void HandleButtonRelease(XButtonEvent* pevent);
+static void HandleButtonRelease(void);
 static void HandleMotion(const XMotionEvent* pevent);
 void DumpSkel(SkeletonPtr s);
 static void FlashRay(RayPtr targetray);
@@ -27,19 +27,19 @@ static int ButtonDown=0;
 static Skeleton bones=
 {
 	20, 150, 200,
-	{50, M_PI_2},
+	{50, M_PI_2, 0, 0, NULL},
 
-	{50, M_PI_4/2},
-	{50, -M_PI_4/2},
-	{20, M_PI_2},
-	{40, -M_PI_4},
-	{40, M_PI_4},
+	{50, M_PI_4/2, 0, 0, NULL},
+	{50, -M_PI_4/2, 0, 0, NULL},
+	{20, M_PI_2, 0, 0, NULL},
+	{40, -M_PI_4, 0, 0, NULL},
+	{40, M_PI_4, 0, 0, NULL},
 
-	{50, -M_PI_4/2},
-	{50, M_PI_4/2},
-	{20, -M_PI_2},
-	{40, M_PI_4},
-	{40, -M_PI_4},
+	{50, -M_PI_4/2, 0, 0, NULL},
+	{50, M_PI_4/2, 0, 0, NULL},
+	{20, -M_PI_2, 0, 0, NULL},
+	{40, M_PI_4, 0, 0, NULL},
+	{40, -M_PI_4, 0, 0, NULL},
 };
 
 static int offsetx, offsety;
@@ -108,7 +108,7 @@ int main(int argc, char** argv)
 		if (my_event.type == ButtonPress)
 			HandleButtonPress((XButtonEvent*)&my_event);
 		if (my_event.type == ButtonRelease)
-			HandleButtonRelease((XButtonEvent*)&my_event);
+			HandleButtonRelease();
 		if (my_event.type == MotionNotify)
 			HandleMotion((XMotionEvent*)&my_event);
 		else if (my_event.type == Expose) {
@@ -135,7 +135,7 @@ static void HandleKeyPress(XKeyEvent* pevent)
 	}
 }
 
-static void HandleButtonRelease(XButtonEvent* pevent)
+static void HandleButtonRelease(void)
 {
 	ButtonDown=0;
 	DrawSkel(&bones, unset_gc, buffer[0]);
