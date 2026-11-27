@@ -47,14 +47,14 @@ BINARIES = {
 }
 
 
-def run(cmd):
+def run(cmd: list[str]) -> None:
     """ Run a command, exiting the process on the first failure. """
     ret = subprocess.call(cmd)
     if ret != 0:
         sys.exit(ret)
 
 
-def generate_protocols(gen_folder):
+def generate_protocols(gen_folder: str) -> None:
     """ Generate client headers and glue code for the Wayland protocols. """
     pkgdatadir = subprocess.check_output(
         ["pkg-config", "--variable=pkgdatadir", "wayland-protocols"],
@@ -69,7 +69,7 @@ def generate_protocols(gen_folder):
         run(["wayland-scanner", "private-code", xml, code])
 
 
-def compile_objects(stems, tmp):
+def compile_objects(stems: list[str], tmp: str) -> None:
     """ Compile each unique source stem to an object file in tmp. """
     for stem in stems:
         obj = os.path.join(tmp, stem + ".o")
@@ -77,7 +77,7 @@ def compile_objects(stems, tmp):
         run([CC, *CFLAGS, "-I", tmp, "-c", "-o", obj, src])
 
 
-def main():
+def main() -> None:
     """ main entry point """
     with tempfile.TemporaryDirectory() as tmp:
         generate_protocols(tmp)
